@@ -1,6 +1,9 @@
+---
 # Personal Habit Tracker (Backend)
 
 A fully functional backend API for a personal habit-tracking web application. Users can register, log in securely, and manage habits with automated progress tracking, reminders, and streak monitoring. Built with a scalable and modular backend architecture using Node.js, Express, and MongoDB.
+
+---
 
 ## ✨ Features Implemented
 
@@ -15,6 +18,7 @@ A fully functional backend API for a personal habit-tracking web application. Us
 - ✅ RESTful API tested using Postman
 - ✅ MongoDB schema relationships using `Mongoose`
 
+---
 
 ## ⚙️ Technologies Used
 
@@ -28,40 +32,54 @@ A fully functional backend API for a personal habit-tracking web application. Us
 
 ## 🚀 Getting Started Locally
 
-
+```bash
 git clone https://github.com/NIKHIL-Web040/habit-tracker.git
 cd habit-tracker
 npm install
-
+```
 Create a .env file in the root folder:
 
+```bash
 PORT=3000
 MONGO_URI=your_mongodb_connection_string
-Then run the server:
+```
+- Then run the server:
 
+```bash
 npm run dev
+```
 Server will start at http://localhost:3000
+  
+---
 
-📡 API Endpoints Overview
-Method	Endpoint	Description
-POST	/api/register	Register new user
-POST	/api/login	Login existing user
-POST	/api/habits	Create new habit
-GET	/api/habits/:userId	Fetch all habits for user
-PUT	/api/habits/:habitId	Update a habit
-DELETE	/api/habits/:habitId	Delete a habit
+## 🚀 API Endpoints Overview
 
-Each habit stores:
 
-title, description
+| **Method** | **Endpoint**             | **Description**             |
+|------------|--------------------------|-----------------------------|
+| `POST`     | `/api/register`          | Register new user           |
+| `POST`     | `/api/login`             | Login existing user         |
+| `POST`     | `/api/habits`            | Create new habit            |
+| `GET`      | `/api/habits/:userId`    | Fetch all habits for user   |
+| `PUT`      | `/api/habits/:habitId`   | Update a habit              |
+| `DELETE`   | `/api/habits/:habitId`   | Delete a habit              |
 
-frequency, goal, streak
+---
 
-completedDates, progress
+## Each habit stores:
 
-reminderTime, question
+● title, description
 
-🧠 Planned Enhancements (Post-Submission)
+● frequency, goal, streak
+
+● completedDates, progress
+
+● reminderTime, question
+
+---
+
+## 🧠 Planned Enhancements ##
+
  📈 Weekly Line Chart to visualize user habit flow
 
  🤖 AI habit coach to suggest improvements
@@ -70,23 +88,18 @@ reminderTime, question
 
  🖥️ Full Frontend UI (React or plain HTML/CSS first)
 
-🧑‍💻 Author
-Nikhil Kohli
-GitHub: NIKHIL-Web040
+---
 
-📌 Note
-This is an ongoing project. For this submission, the backend is functional and tested using Postman. Frontend + AI-based features will be added progressively.
+## 👤 Author
 
-
-### ✅ Now do this:
-
-1. Replace your current `README.md` with the above.
-2. Commit and push:
+**Nikhil**  
+[GitHub Profile](https://github.com/NIKHIL-Web040)  
+[Email](mailto:nikhilkohli1527@gmail.com)
 
 
-git add README.md
-git commit -m "Update README with detailed project overview"
-git push
-Once that’s done, your GitHub will look polished and professional — perfect for submitting the link confidently to that MNC form.
+---
 
-Let me know if you’d like to add screenshots, or if you need a demo.gif for later stages.
+## 📌 Note
+
+This project is a work in progress. Frontend, user dashboards, and AI-based habit prediction features are coming soon. Stay tuned!
+
