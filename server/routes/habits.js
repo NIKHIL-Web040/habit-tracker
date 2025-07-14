@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Habit = require('../../models/habit');
+const authMiddleware = require('../middleware/auth');
+
 
 // CREATING a new habit
-router.post('/', async (req, res) => {
-  const { userId, title, description, frequency, reminderTime, goal, question } = req.body;
+router.post('/', authMiddleware ,async (req, res) => {
+  const { userId , title, description, frequency, reminderTime, goal, question } = req.body;
 
   try {
     const newHabit = new Habit({
-      userId,
+      userId: req.user.userId,
       title,
       description,
       frequency,
@@ -26,16 +28,16 @@ router.post('/', async (req, res) => {
 });
 
 // READING all habits for a user
-router.get('/:userId', async (req, res) => {
-  const { userId } = req.params;
-  console.log('Fetching habits for userId:', userId); // helpful debug log
+router.get('/:userId', authMiddleware,async (req, res) => {
 
+  const paramId = req.params.userId?.trim();
+  const decodedId = req.user.userId?.toString().trim();
+
+  if (decodedId !== paramId) {
+    return res.status(403).json({ message: 'Access denied. You are not authorized to view these habits.' });
+  }
   try {
-    if (!userId) {
-      return res.status(400).json({ message: 'User ID is required' });
-    }
-
-    const habits = await Habit.find({ userId });
+    const habits = await Habit.find({ userId: decodedId });
 
     res.status(200).json(habits);
   } catch (err) {
@@ -44,22 +46,28 @@ router.get('/:userId', async (req, res) => {
   }
 });
 
-
 // UPDATING habit by ID (progress, title, etc.)
 // Update habit
-router.put('/:habitId', async (req, res) => {
-  try {
-    const updatedHabit = await Habit.findByIdAndUpdate(
-      req.params.habitId,
-      req.body,
-      { new: true } // <- this is important to return the updated document
-    );
+// PUT /api/habits/:habitId
+router.put('/:habitId', authMiddleware, async (req, res) => {
+  const habitId = req.params.habitId;
+  const userIdFromToken = req.user.userId;
 
-    if (!updatedHabit) {
-      return res.status(404).json({ message: 'Habit not found' });
+  try {
+    const habit = await Habit.findOne({ _id: habitId, userId: userIdFromToken });
+    if (!habit) {
+      return res.status(403).json({ message: 'Access denied. You are not allowed to update this habit.' });
     }
 
-    res.status(200).json({ message: 'Habit updated', habit: updatedHabit });
+    const updatedFields = req.body;
+    const updatedHabit = await Habit.findByIdAndUpdate(habitId, updatedFields, {
+      new: true, 
+    });
+
+    res.status(200).json({
+      message: 'Habit updated successfully',
+      habit: updatedHabit,
+    });
   } catch (err) {
     console.error('Error updating habit:', err);
     res.status(500).json({ message: 'Server error while updating habit' });
@@ -67,18 +75,26 @@ router.put('/:habitId', async (req, res) => {
 });
 
 
+
 // DELETING habit by ID
-router.delete('/:habitId', async (req, res) => {
+router.delete('/:habitId', authMiddleware, async (req, res) => {
+  const habitId = req.params.habitId;
+  const userIdFromToken = req.user.userId;
+
   try {
-    const deletedHabit = await Habit.findByIdAndDelete(req.params.habitId);
-    if (!deletedHabit) {
-      return res.status(404).json({ message: 'Habit not found' });
+    const habit = await Habit.findOne({ _id: habitId, userId: userIdFromToken });
+    if (!habit) {
+      return res.status(403).json({ message: 'Access denied. You are not allowed to delete this habit.' });
     }
+
+    await Habit.findByIdAndDelete(habitId);
+
     res.status(200).json({ message: 'Habit deleted successfully' });
   } catch (err) {
     console.error('Error deleting habit:', err);
     res.status(500).json({ message: 'Server error while deleting habit' });
   }
 });
+
 
 module.exports = router;
